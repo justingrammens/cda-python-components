@@ -16,7 +16,7 @@ from pathlib import Path
 
 from piot.common.Singleton import Singleton
 
-import piots.common.ConfigConst as ConfigConst
+import piot.common.ConfigConst as ConfigConst
 
 class ConfigUtil(metaclass = Singleton):
 	"""
