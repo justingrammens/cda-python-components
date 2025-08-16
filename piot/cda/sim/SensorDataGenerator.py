@@ -10,7 +10,6 @@
 import logging
 import math
 import numpy as calcLib
-import matplotlib.pyplot as plotLib
 
 class SensorDataGenerator(object):
 	"""
@@ -290,14 +289,17 @@ class SensorDataGenerator(object):
 		@param chartXLabel The string to use for the X Label.
 		@param chartYLabel The string to use for the Y Label.
 		"""
-		self.plotter = plotLib
+
+		import matplotlib.pyplot as plotLib # only import MatPlotLib if this method is called
+
+		plotter = plotLib
 		
-		self.plotter.plot(dataSet.getTimeEntries(), dataSet.getDataEntries())
-		self.plotter.title(chartTitle)
-		self.plotter.ylabel(chartYLabel)
-		self.plotter.xlabel(chartXLabel)
-		self.plotter.grid(True, which = 'both')
-		self.plotter.show()
+		plotter.plot(dataSet.getTimeEntries(), dataSet.getDataEntries())
+		plotter.title(chartTitle)
+		plotter.ylabel(chartYLabel)
+		plotter.xlabel(chartXLabel)
+		plotter.grid(True, which = 'both')
+		plotter.show()
 		
 
 from time import time, ctime

@@ -1,0 +1,7 @@
+    {
+      "justMyCode": false,
+      "name": "Programming the IoT - CDA Implementation",
+      "type": "python",
+      "request": "launch",
+      "python": "./venv/bin/python"
+    },

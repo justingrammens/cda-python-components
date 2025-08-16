@@ -7,7 +7,7 @@
 # Copyright (c) 2020 by Andrew D. King
 # 
 
-import progrpiotammingtheiot.common.ConfigConst as ConfigConst
+import piot.common.ConfigConst as ConfigConst
 
 from piot.common.ResourceNameEnum import ResourceNameEnum
 from piot.common.IDataMessageListener import IDataMessageListener
