@@ -37,6 +37,13 @@ class ConstrainedDeviceApp():
 		logging.info("Initializing CDA...")
 		
 		# TODO: implementation here
+		
+		self.isStarted = False
+
+	def isAppStarted(self) -> bool:
+		"""
+		"""
+		return self.isStarted
 
 	def startApp(self):
 		"""
@@ -83,14 +90,14 @@ def main():
 
 	# init ConfigUtil
 	configUtil = ConfigUtil(configFile)
-	eda = None
+	cda = None
 
 	try:
-		# init EDA
-		eda = ConstrainedDeviceApp()
+		# init CDA
+		cda = ConstrainedDeviceApp()
 
-		# start EDA
-		eda.startApp()
+		# start CDA
+		cda.startApp()
 
 		# check if CDA should run forever
 		runForever = configUtil.getBoolean(ConfigConst.CONSTRAINED_DEVICE, ConfigConst.RUN_FOREVER_KEY)
@@ -101,16 +108,16 @@ def main():
 				sleep(5)
 			
 		else:
-			# run EDA for ~65 seconds then exit
-			if (eda.isAppStarted()):
+			# run CDA for ~65 seconds then exit
+			if (cda.isAppStarted()):
 				sleep(65)
-				eda.stopApp(0)
+				cda.stopApp(0)
 			
 	except KeyboardInterrupt:
 		logging.warning('Keyboard interruption for CDA. Exiting.')
 
-		if (eda):
-			eda.stopApp(-1)
+		if (cda):
+			cda.stopApp(-1)
 
 	except Exception as e:
 		# handle any uncaught exception that may be thrown
@@ -118,8 +125,8 @@ def main():
 		logging.error('Startup exception caused CDA to fail. Exiting.')
 		traceback.print_exception(type(e), e, e.__traceback__)
 
-		if (eda):
-			eda.stopApp(-2)
+		if (cda):
+			cda.stopApp(-2)
 
 	# unnecessary
 	logging.info('Exiting CDA.')
