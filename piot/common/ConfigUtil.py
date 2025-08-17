@@ -37,7 +37,7 @@ class ConfigUtil(metaclass = Singleton):
 		
 		@param configFile The name of the configuration file to load.
 		"""
-		if (configFile != None):
+		if (configFile is not None):
 			self.configFile = configFile
 			
 		self._loadConfig()
@@ -181,23 +181,52 @@ class ConfigUtil(metaclass = Singleton):
 	
 	def _loadConfig(self):
 		"""
-		Attempts to load the config file using the name passed into
-		the constructor.
+		Attempts to load the config file using three checks:
+		 1) Using the name passed into the constructor.
+		 2) Using the default name in ConfigConst.
+		 3) Using the default name in ConfigConst, but up one level (when testing).
 		 
 		"""
-		if (os.path.exists(self.configFile)):
-			logging.info("Loading config: %s", self.configFile)
+
+		# attempt to load user specific config file
+		if (self.configFile != ConfigConst.DEFAULT_CONFIG_FILE_NAME):
+			logging.info("Loading user config: %s", self.configFile)
+
+			self._doLoadConfig(configFilePath = self.configFile)
+
+		# attempt to load default config file
+		if not self.isLoaded:
+			logging.info("Loading default config: %s", self.configFile)
 			
-			self.configParser.read(self.configFile)
-			self.isLoaded = True
-		else:
-			logging.info("Can't load %s. Trying default: %s", self.configFile, ConfigConst.DEFAULT_CONFIG_FILE_NAME)
-			
-			self.configFile = ConfigConst.DEFAULT_CONFIG_FILE_NAME
-			self.configParser.read(self.configFile)
-			self.isLoaded = True
+			self._doLoadConfig(configFilePath = self.configFile)
 		
-		logging.debug("Config: %s", str(self.configParser.sections()))
+		# attempt to load config file from relative parent path
+		if not self.isLoaded:
+			self.configFile = ConfigConst.PARENT_PATH + self.configFile
+
+			logging.info("Moving up one directory and loading config: %s", self.configFile)
+			
+			self._doLoadConfig(configFilePath = self.configFile)
+
+		if not self.isLoaded:
+			logging.warning("No config file loaded. System running without proper configuration.")
+		else:
+			logging.debug("Config: %s", str(self.configParser.sections()))
+
+	def _doLoadConfig(self, configFilePath: str = None):
+		"""
+		Check if path exists - if so, load the config file.
+
+		"""
+		if (os.path.exists(configFilePath)):
+			logging.info("Path found. Attempting config file load: %s", configFilePath)
+
+			self.configParser.read(configFilePath)
+			self.isLoaded = True
+
+			logging.info("Config file successfully loaded from path: %s", configFilePath)
+		else:
+			logging.warning("Path not found. Failed to load config file: %s", configFilePath)
 
 	def _getConfig(self, forceReload: bool = False) -> configparser:
 		"""

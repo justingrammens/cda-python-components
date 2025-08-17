@@ -195,9 +195,11 @@ CDA_SYSTEM_PERF_MSG_RESOURCE          = PRODUCT_NAME + '/' + CONSTRAINED_DEVICE 
 # NOTE: You may need to update these paths if you change
 # the directory structure for python-components
 
-# NOTE: You will need to update this!!
+# NOTE: You may need to update these relative paths!!
 DEFAULT_CONFIG_FILE_NAME = './config/PiotConfig.props'
 DEFAULT_CRED_FILE_NAME   = './cred/PiotCred.props'
+
+PARENT_PATH = '../'
 
 TEST_GDA_DATA_PATH_KEY = 'testGdaDataPath'
 TEST_CDA_DATA_PATH_KEY = 'testCdaDataPath'
@@ -228,16 +230,16 @@ HOST_KEY             = 'host'
 PORT_KEY             = 'port'
 SECURE_PORT_KEY      = 'securePort'
 
-ROOT_CERT_ALIAS = 'root';
+ROOT_CERT_ALIAS = 'root'
 
-KEY_STORE_CLIENT_IDENTITY_KEY = 'keyStoreClientIdentity';
-KEY_STORE_SERVER_IDENTITY_KEY = 'keyStoreServerIdentity';
+KEY_STORE_CLIENT_IDENTITY_KEY = 'keyStoreClientIdentity'
+KEY_STORE_SERVER_IDENTITY_KEY = 'keyStoreServerIdentity'
 
-KEY_STORE_FILE_KEY    = 'keyStoreFile';
-KEY_STORE_AUTH_KEY    = 'keyStoreAuth';
-TRUST_STORE_FILE_KEY  = 'trustStoreFile';
-TRUST_STORE_ALIAS_KEY = 'trustStoreAlias';
-TRUST_STORE_AUTH_KEY  = 'trustStoreAuth';
+KEY_STORE_FILE_KEY    = 'keyStoreFile'
+KEY_STORE_AUTH_KEY    = 'keyStoreAuth'
+TRUST_STORE_FILE_KEY  = 'trustStoreFile'
+TRUST_STORE_ALIAS_KEY = 'trustStoreAlias'
+TRUST_STORE_AUTH_KEY  = 'trustStoreAuth'
 USER_NAME_TOKEN_KEY   = 'userToken'
 USER_AUTH_TOKEN_KEY   = 'authToken'
 API_TOKEN_KEY         = 'apiToken'

@@ -8,6 +8,7 @@
 # 
 
 import logging
+import os
 import unittest
 
 import piot.common.ConfigConst as ConfigConst
@@ -29,12 +30,13 @@ class ConfigUtilTest(unittest.TestCase):
 	#  - EmptyTestConfig.props
 	#  - InvalidTestConfig.props
 	#  - None (which will default to ./config/PiotConfig.props)
-	configFile = "./ValidTestConfig.props"
+	configFile = os.path.dirname(__file__) + "/ValidTestConfig.props"
 	
 	@classmethod
 	def setUpClass(self):
 		logging.basicConfig(format = '%(asctime)s:%(module)s:%(levelname)s:%(message)s', level = logging.DEBUG)
 		logging.info("Testing ConfigUtil class...")
+
 		self.configUtil = ConfigUtil(configFile = self.configFile)
 		
 	def setUp(self):

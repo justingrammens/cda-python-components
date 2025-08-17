@@ -1,7 +1,16 @@
 # Programming the IoT - CDA Python Components
-This is the source repository for the Python components related to my Programming the Internet of Things book and Connected Devices IoT course. These are shell wrappers ONLY and are not a solution set (which is a separately repository, not yet released). For convenience to the reader, some basic functionality has already been implemented (such as configuration logic, consts, interfaces, and test cases).
+This is the source repository for the Python components related to my Programming the Internet of Things book and Connected Devices IoT course. These are shell wrappers ONLY and are not a solution set (which is a separately repository, not yet released). For convenience to the reader, some basic functionality has already been implemented (such as much of the application [ConstrainedDeviceApp.py], the configuration logic, consts, interfaces, and test cases).
 
-The code in this repository is largely comprised of shell classes that are designed to be implemented by the reader and are NOT solutions. These shell classes and their relationships respresent a notional design that aligns with the requirements listed in [Programming the IoT Requirements](https://github.com/orgs/programming-the-iot/projects/1). These requirements encapsulate the programming exercises presented in my book [Programming the Internet of Things: An Introduction to Building Integrated, Device to Cloud IoT Solutions](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401).
+Before cloning this repository with the expectation that it will adhere to certain Python conventions, there are a few important things to note:
+ - Use of 'interfaces': Python doesn't have 'interfaces'. Yet, in keeping with the OO-related design concepts of all code throughout my book, and my goal of maintaining design and naming parity between the CDA (Python) and GDA (Java), I chose to include them here for the CDA as well. They serve no functional purpose, but I find it helpful in terms of describing expected derive object contracts. They're essentially treated as empty concrete 'base' classes only. Not functionally required (or even beneficial), but useful when teaching OO design concepts in my course.
+ - Naming conventions: Some of my naming conventions may not be considered 'Pythonic'. Where feasible, however, I do my best to follow the guidelines ('guidelines', not 'requirements') specified in [PEP-0008](https://peps.python.org/pep-0008/). I do my best to remain consistent throughout. Some important notes:
+   - Module names: I use CapWords for most module names. I find this easier to read - partly because I'm accustomed to it. It's also easier for teaching when comparing functionality between the CDA and GDA. The exception within the CDA is for test cases, where the module name begins with 'test_' followed by the CapWords module name.
+   - Class names: I use CapWords.
+   - Function names: I use camelCase. Again, I find this easier to read then using underscores to separate words.
+   - Variable names: These follow the same convention as function names.
+- Test path: The test path has two sub-directories - one for 'unit' tests, and another for 'integration' tests. This means that the path hierarchy differs slightly from the main source tree (under 'piot') due to the inclusion of 'unit' and 'integration' as parent paths for what is essentially a shared path convention as the main source tree. This allows the user to run all unit tests (and only unit tests) without bothering with setup and configuration for external components often necessary to run the integration tests.
+
+Lastly, please keep in mind that most of the code in this repository is largely comprised of shell classes that are designed to be implemented by the reader and are NOT solutions. These shell classes and their relationships respresent a notional design that aligns with the requirements listed in [Programming the IoT Requirements](https://github.com/orgs/programming-the-iot/projects/1). These requirements encapsulate the programming exercises presented in my book [Programming the Internet of Things: An Introduction to Building Integrated, Device to Cloud IoT Solutions](https://learning.oreilly.com/library/view/programming-the-internet/9781492081401).
 
 ## Links, Exercises, Updates, Errata, and Clarifications
 
@@ -22,24 +31,27 @@ Since Python is also used for various cloud computing activities, there are othe
 
 ## How to navigate the directory structure for this repository
 This repository is comprised of the following top level paths:
-- [config](https://github.com/programming-the-iot/cda-python-components/tree/default/config): Contains basic configuration file(s).
-- [src](https://github.com/programming-the-iot/cda-python-components/tree/default/src): Contains the following source trees:
-  - [src/main/python](https://github.com/programming-the-iot/cda-python-components/tree/default/src/main/python): The main source tree for cda-python-components. Keep in mind that most of these classes are shell representations ONLY and must be implemented as part of the exercises referenced above.
-  - [src/test/python](https://github.com/programming-the-iot/cda-python-components/tree/default/src/test/python): The test source tree for cda-python-components. These are designed to perform very basic unit and integration testing of the implementation of the exercises referenced above. This tree is sectioned by part - part01, part02, and part03 - which correspond to the structure of Programming the Internet of Things.
-- [simTestData](https://github.com/programming-the-iot/cda-python-components/tree/default/simTestData): Contains sample simulated test data.
+- [config](https://github.com/programming-the-iot/cda-python-components/blob/default/config): Contains basic configuration file(s).
+- [piot](https://github.com/programming-the-iot/cda-python-components/blob/default/piot): The top level of the 'Programming the IoT, or piot' project source code.
+- [tests](https://github.com/programming-the-iot/cda-python-components/blob/default/tests): The top level of the 'Programming the IoT, or piot' project tests.
+  - [unit](https://github.com/programming-the-iot/cda-python-components/blob/default/tests/unit): The unit test source tree for cda-python-components.
+  - [integration](https://github.com/programming-the-iot/cda-python-components/blob/default/tests/integration): The integration test source tree for cda-python-components.
+- [simTestData](https://github.com/programming-the-iot/cda-python-components/blob/default/simTestData): Contains sample simulated test data.
   - This simulated test data was generated as part of my own solution to Lab Module 5 as part of the exercises referenced above. Keep in mind that these data are from my own solution, which will likely be different from your own.
 
 Here are some other files at the top level that are important to review:
-- [basic_imports.txt](https://github.com/programming-the-iot/cda-python-components/blob/default/basic_imports.txt): The core library dependencies - use pip to install.
-- [cv_imports.txt](https://github.com/programming-the-iot/cda-python-components/blob/default/cv_imports.txt): The optional CV library dependencies - STILL BEING TESTED - use pip to install.
+- [requirements.txt](https://github.com/programming-the-iot/cda-python-components/blob/default/requirements.txt): The core library dependencies - use pip to install.
+- [requirements_cv.txt](https://github.com/programming-the-iot/cda-python-components/blob/default/requirements_cv.txt): The optional CV library dependencies - STILL BEING TESTED - use pip to install.
 - [README.md](https://github.com/programming-the-iot/cda-python-components/blob/default/README.md): This README.
 - [LICENSE](https://github.com/programming-the-iot/cda-python-components/blob/default/LICENSE): The repository's LICENSE file.
 
 Lastly, here are some 'dot' ('.{filename}') files pertaining to dev environment setup that you may find useful (or not - if so, just delete them after cloning the repo):
 - [.gitignore](https://github.com/programming-the-iot/cda-python-components/blob/default/.gitignore): The obligatory .gitignore that you should probably keep in place, with any additions that are relevant for your own cloned instance.
-- [.vscode/settings.json](https://github.com/programming-the-iot/cda-python-components/blob/default/.vscode/settings.json): The VS Code project configuration file that may / may not be useful for your own cloned instance. It includes a basic configuration for the unittest module.
-- [.project](https://github.com/programming-the-iot/cda-python-components/blob/default/.project): The Eclipse IDE project configuration file that may / may not be useful for your own cloned instance. Note that using this file to help create your Eclipse IDE project will result in the project name 'piot-cda-python-components' (which can be changed, of course).
-- [.pydevproject](https://github.com/programming-the-iot/cda-python-components/blob/default/.pydevproject): The Eclipse IDE and PyDev-specific configuration file for your Python environment that may / may not be useful for your own cloned instance.
+- [.vscode](https://github.com/programming-the-iot/cda-python-components/blob/default/.vscode): The VS Code project configuration file directory (useful if you're using VS Code as your IDE).
+  - [launch.json](https://github.com/programming-the-iot/cda-python-components/blob/default/.vscode/launch.json): The default VS Code project debug launch configuration that may / may not be useful for your own cloned instance.
+  - [settings.json](https://github.com/programming-the-iot/cda-python-components/blob/default/.vscode/settings.json): The default VS Code project customizations configuration that may / may not be useful for your own cloned instance.
+- [.project](https://github.com/programming-the-iot/cda-python-components/blob/default/.project): The default Eclipse IDE project configuration file that may / may not be useful for your own cloned instance. Note that using this file to help create your Eclipse IDE project will result in the project name 'piot-cda-python-components' (which can be changed, of course).
+- [.pydevproject](https://github.com/programming-the-iot/cda-python-components/blob/default/.pydevproject): The default Eclipse IDE and PyDev-specific configuration file for your Python environment that may / may not be useful for your own cloned instance.
 
 NOTE: The directory structure and all files are subject to change based on feedback I receive from readers of my book and students in my IoT class, as well as improvements I find to be helpful for overall repo betterment.
 
