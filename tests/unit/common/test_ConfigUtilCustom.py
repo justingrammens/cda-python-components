@@ -15,7 +15,7 @@ import piot.common.ConfigConst as ConfigConst
 
 from piot.common.ConfigUtil import ConfigUtil
 
-class ConfigUtilTest(unittest.TestCase):
+class ConfigUtilCustomTest(unittest.TestCase):
 	"""
 	This test case class contains very basic unit tests for
 	ConfigUtil. It should not be considered complete,
@@ -35,7 +35,7 @@ class ConfigUtilTest(unittest.TestCase):
 	@classmethod
 	def setUpClass(self):
 		logging.basicConfig(format = '%(asctime)s:%(module)s:%(levelname)s:%(message)s', level = logging.DEBUG)
-		logging.info("Testing ConfigUtil class...")
+		logging.info("Testing ConfigUtil class (custom file load)...")
 
 		self.configUtil = ConfigUtil(configFile = self.configFile)
 		
@@ -49,7 +49,7 @@ class ConfigUtilTest(unittest.TestCase):
 		enableLogging = self.configUtil.hasProperty(ConfigConst.CONSTRAINED_DEVICE, ConfigConst.ENABLE_LOGGING_KEY)
 		self.assertTrue(enableLogging)
 	
-	@unittest.skip("Ignore for now.")
+	#@unittest.skip("Ignore for now.")
 	def testGetCredentials(self):
 		creds = self.configUtil.getCredentials(ConfigConst.CONSTRAINED_DEVICE)
 		self.assertIsNotNone(creds)
