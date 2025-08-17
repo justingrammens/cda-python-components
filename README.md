@@ -5,7 +5,7 @@ Before cloning this repository with the expectation that it will adhere to certa
  - Use of 'interfaces':
    - Python doesn't have 'interfaces'. Yet, in keeping with the OO-related design concepts of all code throughout my book, and my goal of maintaining design and naming parity between the CDA (Python) and GDA (Java), I chose to include them here for the CDA as well. While they largely serve no functional purpose, I find the explicit definition of 'interfaces' helpful in terms of describing expected derived object contracts. In Python, these classes are essentially treated as empty concrete 'base' classes. They may not be useful functionally, but are helpful when teaching OO design concepts in my course.
  - Naming conventions:
-   - Some of my naming conventions may not be considered 'Pythonic'. Where feasible, however, I do my best to follow the guidelines ('guidelines', not 'requirements') specified in [PEP-0008](https://peps.python.org/pep-0008/). I do my best to remain consistent throughout. Some important notes:
+   - Some of my naming conventions may not be considered 'Pythonic'. Where feasible, however, I do my best to follow the guidelines ('guidelines', not 'requirements') specified in [PEP-0008](https://peps.python.org/pep-0008/), and remain consistent with my conventions throughout the code base. Some important notes:
      - Module names: I use CapWords for most module names. I find this easier to read - partly because I'm accustomed to it. It's also easier for teaching when comparing functionality between the CDA and GDA. The exception within the CDA is for test cases, where the module name begins with 'test_' followed by the CapWords module name.
      - Class names: I use CapWords.
      - Function names: I use camelCase. Again, I find this easier to read then using underscores to separate words.
@@ -118,3 +118,4 @@ If any code samples or other technology this work contains, describes, and / or 
 Please see [LICENSE](https://github.com/programming-the-iot/cda-python-components/blob/default/LICENSE) if you plan to use this code.
 
 Please refer to the referenced libraries for their respective licenses.
+
