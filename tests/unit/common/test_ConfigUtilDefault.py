@@ -4,16 +4,16 @@
 # project, and is available via the MIT License, which can be
 # found in the LICENSE file at the top level of this repository.
 # 
-# Copyright (c) 2020 by Andrew D. King
+# Copyright (c) 2025 by Andrew D. King
 # 
 
 import logging
 import os
 import unittest
 
-import piot.common.ConfigConst as ConfigConst
+import programmingtheiot.common.ConfigConst as ConfigConst
 
-from piot.common.ConfigUtil import ConfigUtil
+from programmingtheiot.common.ConfigUtil import ConfigUtil
 
 class ConfigUtilDefaultTest(unittest.TestCase):
 	"""

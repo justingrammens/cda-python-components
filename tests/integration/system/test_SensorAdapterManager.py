@@ -4,7 +4,7 @@
 # project, and is available via the MIT License, which can be
 # found in the LICENSE file at the top level of this repository.
 # 
-# Copyright (c) 2020 by Andrew D. King
+# Copyright (c) 2020 - 2025 by Andrew D. King
 # 
 
 import logging
@@ -12,8 +12,8 @@ import unittest
 
 from time import sleep
 
-from piot.common.DefaultDataMessageListener import DefaultDataMessageListener
-from piot.cda.system.SensorAdapterManager import SensorAdapterManager
+from programmingtheiot.common.DefaultDataMessageListener import DefaultDataMessageListener
+from programmingtheiot.cda.system.SensorAdapterManager import SensorAdapterManager
 
 class SensorAdapterManagerTest(unittest.TestCase):
 	"""

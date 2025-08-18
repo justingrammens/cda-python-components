@@ -4,17 +4,17 @@
 # project, and is available via the MIT License, which can be
 # found in the LICENSE file at the top level of this repository.
 # 
-# Copyright (c) 2020 by Andrew D. King
+# Copyright (c) 2020 - 2025 by Andrew D. King
 # 
 
 import logging
 import unittest
 
-from piot.data.DataUtil import DataUtil
+from programmingtheiot.data.DataUtil import DataUtil
 
-from piot.data.ActuatorData import ActuatorData
-from piot.data.SensorData import SensorData
-from piot.data.SystemPerformanceData import SystemPerformanceData
+from programmingtheiot.data.ActuatorData import ActuatorData
+from programmingtheiot.data.SensorData import SensorData
+from programmingtheiot.data.SystemPerformanceData import SystemPerformanceData
 
 class DataUtilTest(unittest.TestCase):
 	"""
