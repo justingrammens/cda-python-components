@@ -10,7 +10,7 @@
 import logging
 import unittest
 
-from piot.cda.system.SystemCpuUtilTask import SystemCpuUtilTask
+from programmingtheiot.cda.system.SystemCpuUtilTask import SystemCpuUtilTask
 
 class SystemCpuUtilTaskTest(unittest.TestCase):
 	"""
