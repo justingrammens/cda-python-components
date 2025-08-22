@@ -2,4 +2,5 @@
 **/cert
 **/cred
 **/venv
+**/piot-venv
 .venv
