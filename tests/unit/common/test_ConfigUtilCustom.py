@@ -49,8 +49,8 @@ class ConfigUtilCustomTest(unittest.TestCase):
 		enableLogging = self.configUtil.hasProperty(ConfigConst.CONSTRAINED_DEVICE, ConfigConst.ENABLE_LOGGING_KEY)
 		self.assertTrue(enableLogging)
 	
-	# uncommented below to ignore it since it wasn't able to find the cred file!
-	@unittest.skip("Ignore for now.")
+	#uncommented below to ignore it if oyou want. I was seeing issues, but was fixed, once I had had the right working directory to be the root of the project. 
+	#@unittest.skip("Ignore for now.")
 	def testGetCredentials(self):
 		creds = self.configUtil.getCredentials(ConfigConst.CONSTRAINED_DEVICE)
 		print(creds)
