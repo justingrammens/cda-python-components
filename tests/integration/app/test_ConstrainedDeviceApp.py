@@ -39,9 +39,11 @@ class ConstrainedDeviceAppTest(unittest.TestCase):
 		self.cda = ConstrainedDeviceApp()
 		
 	def setUp(self):
+		print("We are in setup now!")
 		pass
 
 	def tearDown(self):
+		print("In tear down now")
 		pass
 
 	def testRunConstrainedDeviceApp(self):
