@@ -31,7 +31,20 @@ class SystemPerformanceManager(object):
 	"""
 
 	def __init__(self):
-		pass
+		configUtil = ConfigUtil()
+	
+		self.pollRate = \
+		configUtil.getInteger( \
+			section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.POLL_CYCLES_KEY, defaultVal = ConfigConst.DEFAULT_POLL_CYCLES)
+	
+		self.locationID = \
+		configUtil.getProperty( \
+			section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.DEVICE_LOCATION_ID_KEY, defaultVal = ConfigConst.NOT_SET)
+	
+		if self.pollRate <= 0:
+			self.pollRate = ConfigConst.DEFAULT_POLL_CYCLES
+		
+		self.dataMsgListener = None
 
 	def handleTelemetry(self):
 		pass
@@ -40,7 +53,7 @@ class SystemPerformanceManager(object):
 		pass
 	
 	def startManager(self):
-		pass
-		
+		logging.info("Started SystemPerformanceManager.")
+	
 	def stopManager(self):
-		pass
+		logging.info("Stopped SystemPerformanceManager.")
