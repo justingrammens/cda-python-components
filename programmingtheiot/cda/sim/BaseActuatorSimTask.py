@@ -41,7 +41,8 @@ class BaseActuatorSimTask():
 		pass
 	
 	def getSimpleName(self) -> str:
-		pass
+		# Always return something usable
+		return getattr(self, "simpleName", None) or type(self).__name__
 	
 	def updateActuator(self, data: ActuatorData) -> ActuatorData:
 		if data and self.typeID == data.getTypeID():
