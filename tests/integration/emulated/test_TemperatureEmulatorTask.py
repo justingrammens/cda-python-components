@@ -17,6 +17,8 @@ import programmingtheiot.common.ConfigConst as ConfigConst
 from programmingtheiot.data.SensorData import SensorData
 from programmingtheiot.cda.emulated.TemperatureSensorEmulatorTask import TemperatureSensorEmulatorTask
 
+from pisense import SenseHAT
+
 class TemperatureEmulatorTaskTest(unittest.TestCase):
 	"""
 	This test case class contains very basic unit tests for
@@ -53,6 +55,10 @@ class TemperatureEmulatorTaskTest(unittest.TestCase):
 		if sd1:
 			self.assertEqual(sd1.getTypeID(), ConfigConst.TEMP_SENSOR_TYPE)
 			logging.info("SensorData: %f - %s", sd1.getValue(), str(sd1))
+			
+			# ADDED IN SOME EXTRA STUFF TO SEE THE SENSE HAT EMULATOR IN ACTION
+			#self.sh = SenseHAT(emulate = True)
+			#self.sh.screen.scroll_text("Temp: " + str(sd1.getValue()) + " C")
 			
 			# wait 5 seconds
 			sleep(5)
