@@ -196,8 +196,10 @@ CDA_SYSTEM_PERF_MSG_RESOURCE          = PRODUCT_NAME + '/' + CONSTRAINED_DEVICE 
 # the directory structure for python-components
 
 # NOTE: You may need to update these relative paths!!
-DEFAULT_CONFIG_FILE_NAME = './config/PiotConfig.props'
-DEFAULT_CRED_FILE_NAME   = './cred/PiotCred.props'
+#DEFAULT_CONFIG_FILE_NAME = './config/PiotConfig.props'
+DEFAULT_CONFIG_FILE_NAME = '/Users/justingrammens/dev/justingrammens/programming-the-iot/cda-python-components/config/PiotConfig.props'
+#DEFAULT_CRED_FILE_NAME   = './cred/PiotCred.props'
+DEFAULT_CRED_FILE_NAME   = '/Users/justingrammens/dev/justingrammens/programming-the-iot/cda-python-components/cred/PiotCred.props' 
 
 PARENT_PATH = '../'
 

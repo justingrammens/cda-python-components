@@ -38,13 +38,17 @@ enableCrypt    = False
 #
 [ConstrainedDevice]
 deviceLocationID = constraineddevice001
+# added by Justin
+enableSimulator = True
 enableEmulator   = False
 enableSenseHAT   = False
-enableMqttClient = True
+#enableMqttClient = True # CHANGED BY JUSTIN
+enableMqttClient = False
 enableCoapServer = False
 enableCoapClient = False
 enableSystemPerformance = True
-enableSensing    = False
+#enableSensing    = False
+enableSensing    = True
 enableLogging    = True
 pollCycleSecs    = 5
 testGdaDataPath  = /tmp/gda-data

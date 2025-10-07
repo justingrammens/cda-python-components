@@ -9,6 +9,7 @@
 
 import logging
 import unittest
+import os
 
 import programmingtheiot.common.ConfigConst as ConfigConst
 
@@ -33,6 +34,8 @@ class ActuatorDataTest(unittest.TestCase):
 		logging.info("Testing ActuatorData class...")
 		
 	def setUp(self):
+		#logging.info("Current working directory:", os.getcwd())
+		#logging.info("Absolute path being searched:", os.path.abspath("../.././config/PiotConfig.props"))
 		pass
 
 	def tearDown(self):
