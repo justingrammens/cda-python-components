@@ -59,6 +59,10 @@ class DataIntegrationTest(unittest.TestCase):
 	def tearDown(self):
 		pass
 	
+	
+	# AI USE CASES BELOW TO WRITE DATA TO CDA PATH AND READ FROM GDA PATH
+	# NOTE: NEED TO RUN THESE SO YOU HAVE DATA TO READ IN THE GDA <<-- NOTE: AI WROTE THIS COMMENT IT KNEW IN GDA!
+	
 	#@unittest.skip("Ignore for now.")
 	def testWriteActuatorDataToCdaDataPath(self):
 		logging.info("\n\n----- [ActuatorData to JSON to file] -----")

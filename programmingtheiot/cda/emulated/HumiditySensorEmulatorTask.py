@@ -10,6 +10,8 @@
 # Programming the Internet of Things project.
 # 
 
+import logging
+
 from programmingtheiot.data.SensorData import SensorData
 
 import programmingtheiot.common.ConfigConst as ConfigConst
@@ -40,7 +42,7 @@ class HumiditySensorEmulatorTask(BaseSensorSimTask):
 	
 	def generateTelemetry(self) -> SensorData:
 		sensorData = SensorData(name = self.getName(), typeID = self.getTypeID())
-		sensorVal = self.sh.environ.humidity
+		sensorVal = self.sh.environ.humidity	
 		sensorData.setValue(sensorVal)
 		self.latestSensorData = sensorData
 		return sensorData
