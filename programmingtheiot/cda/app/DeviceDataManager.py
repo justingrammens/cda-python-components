@@ -34,6 +34,10 @@ from programmingtheiot.data.ActuatorData import ActuatorData
 from programmingtheiot.data.SensorData import SensorData
 from programmingtheiot.data.SystemPerformanceData import SystemPerformanceData
 
+# NEW: Redis adapter
+#from programmingtheiot.cda.connection.RedisPersistenceAdapter import RedisPersistenceAdapter
+
+
 class DeviceDataManager(IDataMessageListener):
 	"""
 	Shell representation of class for student implementation.
