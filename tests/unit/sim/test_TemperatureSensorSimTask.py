@@ -36,13 +36,14 @@ class TemperatureSensorSimTaskTest(unittest.TestCase):
 		pass
 
 	def testGenerateTelemetry(self):
-		sd = self.tSimTask.generateTelemetry()
-		
-		self.assertIsNotNone(sd)
-		
-		# default simulator generates temp values > 0.0C
-		self.assertGreaterEqual(sd.getValue(), ConfigConst.DEFAULT_VAL)
-		logging.info("Temperature SensorData: %s", str(sd))
+		for i in range(6):
+			sd = self.tSimTask.generateTelemetry()
+			
+			self.assertIsNotNone(sd)
+			
+			# default simulator generates temp values > 0.0C
+			self.assertGreaterEqual(sd.getValue(), ConfigConst.DEFAULT_VAL)
+			logging.info("Temperature SensorData: %s", str(sd))
 			
 	def testGetTelemetryValue(self):
 		val = self.tSimTask.getTelemetryValue()

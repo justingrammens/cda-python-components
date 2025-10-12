@@ -63,7 +63,7 @@ class BaseSensorSimTask():
 			logging.info("MIN VALUE IS: %f", self.minVal)
 			logging.info("MAX VALUE IS: %f", self.minVal)
 			
-			
+			## NOTE: Using RANDOM and uniform here to get float values!!!
 			sensorVal = random.uniform(self.minVal, self.maxVal)
 			logging.info("BaseSensorSimTask: Generating telemetry for sensor: %s, value: %f", self.getName(), sensorVal)
 			logging.info("BaseSensorSimTask: Using randomizer? %s", self.useRandomizer)

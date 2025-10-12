@@ -58,6 +58,15 @@ class SenseHatEmulatorQuickTest(unittest.TestCase):
 		
 		self.sh.screen.clear()
 		self.sh.screen.close()
+		
+		# Lets' log to the screen some of the current values
+		logging.info("Temperature: %f C", self.sh.environ.temperature)
+		logging.info("Humidity: %f %%", self.sh.environ.humidity)
+		logging.info("Pressure: %f mbar", self.sh.environ.pressure)
+		logging.info("Orientation: %s", str(self.sh.orientation))
+		logging.info("Accelerometer: %s", str(self.sh.accelerometer))
+		logging.info("Gyroscope: %s", str(self.sh.gyroscope))
+		
 				
 if __name__ == "__main__":
 	unittest.main()
