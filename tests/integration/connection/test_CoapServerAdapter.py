@@ -197,7 +197,7 @@ class CoapServerAdapterTest(unittest.TestCase):
 		sysPerfData = SystemPerformanceData()
 		sysPerfData.setName("SystemPerfMsg")
 		sysPerfData.setCpuUtilization(sysPerfVal)
-		sysPerfData.setDiskUtilization(sysPerfVal)
+		#sysPerfData.setDiskUtilization(sysPerfVal)
 		sysPerfData.setMemoryUtilization(sysPerfData)
 		
 		# Uncomment the next SLOC to trigger data message listener callback for perf data
@@ -206,6 +206,8 @@ class CoapServerAdapterTest(unittest.TestCase):
 		sensorData = SensorData()
 		sensorData.setName(ConfigConst.TEMP_SENSOR_NAME)
 		sensorData.setValue(tempVal)
+		
+		logging.info("Updating telemetry data: " + str(sensorData))
 		
 		self.dataMsgListener.handleSensorMessage(sensorData)
 		
