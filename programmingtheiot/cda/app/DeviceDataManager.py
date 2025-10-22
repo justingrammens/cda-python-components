@@ -46,6 +46,12 @@ class DeviceDataManager(IDataMessageListener):
 	def __init__(self):
 		self.configUtil = ConfigUtil()
 	
+		self.enableMqttClient = \
+			self.configUtil.getBoolean( \
+				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_MQTT_CLIENT_KEY)
+		
+		logging.info(f"EnableMqttClient = {self.enableMqttClient}")
+		
 		self.enableSystemPerf   = \
 			self.configUtil.getBoolean( \
 				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_SYSTEM_PERF_KEY)
@@ -79,6 +85,16 @@ class DeviceDataManager(IDataMessageListener):
 		if self.enableActuation:
 			self.actuatorAdapterMgr = ActuatorAdapterManager(dataMsgListener = self)
 			logging.info("Local actuation capabilities enabled")
+			
+		# [CDA-06-004] Create MQTT client and set listener (if enabled)
+		
+		self.mqttClient = None
+		
+		if self.enableMqttClient:
+			self.mqttClient = MqttClientConnector()
+			self.mqttClient.setDataMessageListener(self)
+			logging.info("MQTT client initialized and listener set.")  # [CDA-06-004]
+		
 		
 		self.handleTempChangeOnDevice = \
 			self.configUtil.getBoolean( \
@@ -234,6 +250,17 @@ class DeviceDataManager(IDataMessageListener):
 		if self.sensorAdapterMgr:
 			self.sensorAdapterMgr.startManager()
 			
+			# [CDA-06-004] Connect MQTT and subscribe to actuator command topic
+		if self.mqttClient:
+			try:
+				self.mqttClient.connectClient()
+				self.mqttClient.subscribeToTopic(
+					ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE, 
+					callback = None, qos = ConfigConst.DEFAULT_QOS)
+				logging.info("MQTT connected and subscribed to %s", ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE.value)
+			except Exception as e:
+				logging.exception("Failed to start MQTT client: %s", e)
+			
 		logging.info("Started DeviceDataManager.")
 		
 	def stopManager(self):
@@ -244,6 +271,17 @@ class DeviceDataManager(IDataMessageListener):
 		
 		if self.sensorAdapterMgr:	
 			self.sensorAdapterMgr.stopManager()
+			
+		# [CDA-06-004] Unsubscribe and disconnect MQTT
+		if self.mqttClient:
+			try:
+				self.mqttClient.unsubscribeFromTopic(ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE)
+			except Exception as e:
+				logging.debug("MQTT unsubscribe failed (continuing shutdown): %s", e)
+			try:
+				self.mqttClient.disconnectClient()
+			except Exception as e:
+				logging.debug("MQTT disconnect failed: %s", e)
 			
 		logging.info("Stopped DeviceDataManager.")
 		

@@ -42,20 +42,21 @@ deviceLocationID = constraineddevice001
 enableSimulator = True
 #enableEmulator   = False
 #enableSenseHAT   = False
-enableEmulator   = True 
-enableSenseHAT   = True
-#enableMqttClient = True # CHANGED BY JUSTIN
-enableMqttClient = False
+enableEmulator   = False 
+enableSenseHAT   = False
+enableMqttClient = True
+#enableMqttClient = False
 enableCoapServer = False
 enableCoapClient = False
-enableSystemPerformance = True
+enableSystemPerformance = False
 #enableSensing    = False
-enableSensing    = True
+enableSensing    = False
 enableLogging    = True
 pollCycleSecs    = 5
 testGdaDataPath  = /tmp/gda-data
 testCdaDataPath  = /tmp/cda-data
 testEmptyApp     = False
+runForever = True
 
 # configurable limits for sensor simulation
 humiditySimFloor   =   35.0

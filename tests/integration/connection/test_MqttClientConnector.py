@@ -37,7 +37,7 @@ class MqttClientConnectorTest(unittest.TestCase):
 		logging.info("Testing MqttClientConnector class...")
 		
 		self.cfg = ConfigUtil()
-		self.mcc = MqttClientConnector()
+		self.mcc = MqttClientConnector(clientID = "testClient")
 		
 	def setUp(self):
 		pass
@@ -45,6 +45,17 @@ class MqttClientConnectorTest(unittest.TestCase):
 	def tearDown(self):
 		pass
 
+	### NOTE!!!!!
+	'''
+	YOU CAN RUN THE MOSQUITTO SERVER ONLY WHEN NEEDED BY RUNNING
+	/opt/homebrew/opt/mosquitto/sbin/mosquitto -c /opt/homebrew/etc/mosquitto/mosquitto.conf
+	AND STOP IT WHEN YOU ARE DONE TESTING BY PRESSING CONTROL-C
+	OR YOU COULD START THE SERVICE ALL THE TIME WITH
+	brew services start mosquitto
+	I HAVE CHOSEN TO JUST START/STOP AS NEEDED FOR NOW.
+	YOU MAY NEED TO ADJUST THE HOST/PORT IN programmingtheiot/common/Config.properties
+	KEEP ALIVE BY DEFAULT IS 60 SECONDS
+	'''
 	@unittest.skip("Ignore for now.")
 	def testConnectAndDisconnect(self):
 		delay = self.cfg.getInteger(ConfigConst.MQTT_GATEWAY_SERVICE, ConfigConst.KEEP_ALIVE_KEY, ConfigConst.DEFAULT_KEEP_ALIVE)
@@ -55,6 +66,7 @@ class MqttClientConnectorTest(unittest.TestCase):
 		
 		self.mcc.disconnectClient()
 
+	# UNCOMMMENT OUT OFR NOW!
 	@unittest.skip("Ignore for now.")
 	def testConnectAndCDAManagementStatusPubSub(self):
 		qos = 1
@@ -74,7 +86,7 @@ class MqttClientConnectorTest(unittest.TestCase):
 		
 		self.mcc.disconnectClient()
 
-	@unittest.skip("Ignore for now.")
+	#@unittest.skip("Ignore for now.")
 	def testNewActuatorCmdPubSub(self):
 		qos = 1
 	
