@@ -39,28 +39,120 @@ class MqttClientConnector(IPubSubClient):
 		the same clientID continuously attempts to re-connect, causing the broker to
 		disconnect the previous instance.
 		"""
-		pass
+		self.config = ConfigUtil()
+		self.dataMsgListener = None
+	
+		self.host = \
+		self.config.getProperty( \
+			ConfigConst.MQTT_GATEWAY_SERVICE, ConfigConst.HOST_KEY, ConfigConst.DEFAULT_HOST)
+	
+		self.port = \
+		self.config.getInteger( \
+			ConfigConst.MQTT_GATEWAY_SERVICE, ConfigConst.PORT_KEY, ConfigConst.DEFAULT_MQTT_PORT)
+	
+		self.keepAlive = \
+		self.config.getInteger( \
+			ConfigConst.MQTT_GATEWAY_SERVICE, ConfigConst.KEEP_ALIVE_KEY, ConfigConst.DEFAULT_KEEP_ALIVE)
+	
+		self.defaultQos = \
+		self.config.getInteger( \
+			ConfigConst.MQTT_GATEWAY_SERVICE, ConfigConst.DEFAULT_QOS_KEY, ConfigConst.DEFAULT_QOS)
+	
+		self.mqttClient = None
+		
+		
+		# IMPORTANT:
+		# 
+		# You can choose to set clientID in a number of ways:
+		#  1 - use the deviceLocationID value in PiotConfig.props as the clientID (see below)
+		#  2 - pass a custom clientID into constructor (from DeviceDataManager or your test)
+		#  3 - hard code a clientID in this constructor (generally not recommended)
+		#  4 - if using Python Paho, set NO client ID and let broker auto-assign
+		#      a random value (not recommended if setting clean session flag to False)
+	
+		# NOTE: There are other ways to implement this logic, esp. if you
+		# want to ensure the clientID passed into the constructor always
+		# takes precendent. This is only one viable solution.
+	
+		if not clientID:
+			# TODO: The following is an example; use your own unique ID
+			self.clientID = 'JUSTIN-CDAMqttClientID001'
+		else:
+		    self.clientID = clientID
+		    
+		
+		'''	
+		self.clientID = \
+			self.config.getProperty( \
+				ConfigConst.CONSTRAINED_DEVICE, ConfigConst.DEVICE_LOCATION_ID_KEY, clientID)
+		'''
+		# TODO: be sure to validate the clientID!
+			
+		logging.info('\tMQTT Client ID:   ' + self.clientID)
+		logging.info('\tMQTT Broker Host: ' + self.host)
+		logging.info('\tMQTT Broker Port: ' + str(self.port))
+		logging.info('\tMQTT Keep Alive:  ' + str(self.keepAlive))
 
 	def connectClient(self) -> bool:
-		pass
+		if not self.mqttClient:
+			# TODO: make clean_session configurable
+			self.mqttClient = mqttClient.Client(client_id = self.clientID, clean_session = True)
+			
+			self.mqttClient.on_connect = self.onConnect
+			self.mqttClient.on_disconnect = self.onDisconnect
+			self.mqttClient.on_message = self.onMessage
+			self.mqttClient.on_publish = self.onPublish
+			self.mqttClient.on_subscribe = self.onSubscribe
+		
+		if not self.mqttClient.is_connected():
+			logging.info('MQTT client connecting to broker at host: ' + self.host)
+			
+			
+			self.mqttClient.connect(self.host, self.port, self.keepAlive)
+			self.mqttClient.loop_start()
+			
+			return True
+		else:
+			logging.warning('MQTT client is already connected. Ignoring connect request.')
+			
+			return False
 		
 	def disconnectClient(self) -> bool:
-		pass
+		if self.mqttClient.is_connected():
+			logging.info('Disconnecting MQTT client from broker: ' + self.host)
+			self.mqttClient.loop_stop()
+			self.mqttClient.disconnect()
+			
+			return True
+		else:
+			logging.warning('MQTT client already disconnected. Ignoring.')
+		
+		return False
 		
 	def onConnect(self, client, userdata, flags, rc):
-		pass
+		logging.info('MQTT client connected to broker: ' + str(client))
 		
 	def onDisconnect(self, client, userdata, rc):
-		pass
+		logging.info('MQTT client disconnected from broker: ' + str(client))
 		
 	def onMessage(self, client, userdata, msg):
-		pass
+		payload = msg.payload
+	
+		if payload:
+			logging.info('MQTT message received with payload: ' + str(payload.decode("utf-8")))
+		else:
+			logging.info('MQTT message received with no payload: ' + str(msg))
+		
+		
+		## POTENTIALLY GET THE PAYLOND FROM THE MESSAGE THIS WAY
+		## CDA-006-02
+		## msg.payload.decode("utf-8")
 			
 	def onPublish(self, client, userdata, mid):
-		pass
+		logging.info('MQTT message published: ' + str(client))
 	
 	def onSubscribe(self, client, userdata, mid, granted_qos):
-		pass
+		logging.info('MQTT client subscribed: ' + str(client))	
 	
 	def onActuatorCommandMessage(self, client, userdata, msg):
 		"""
@@ -77,14 +169,59 @@ class MqttClientConnector(IPubSubClient):
 		"""
 		pass
 	
-	def publishMessage(self, resource: ResourceNameEnum = None, msg: str = None, qos: int = ConfigConst.DEFAULT_QOS):
-		pass
+	def publishMessage(self, resource: ResourceNameEnum = None, msg: str = None, qos: int = ConfigConst.DEFAULT_QOS) -> bool:
+		# check validity of resource (topic)
+		if not resource:
+			logging.warning('No topic specified. Cannot publish message.')
+			return False
+		
+		# check validity of message
+		if not msg:
+			logging.warning('No message specified. Cannot publish message to topic: ' + resource.value)
+			return False
+		
+		# check validity of QoS - set to default if necessary
+		if qos < 0 or qos > 2:
+			qos = ConfigConst.DEFAULT_QOS
+		
+		# publish message, and wait for publish to complete before returning
+		logging.info('Publishing message to topic %s: %s', resource.value, msg)
+		msgInfo = self.mqttClient.publish(topic = resource.value, payload = msg, qos = qos)
+		msgInfo.wait_for_publish()
+		
+		return True
 	
-	def subscribeToTopic(self, resource: ResourceNameEnum = None, callback = None, qos: int = ConfigConst.DEFAULT_QOS):
-		pass
+	def subscribeToTopic(self, resource: ResourceNameEnum = None, callback = None, qos: int = ConfigConst.DEFAULT_QOS) -> bool:
+		# check validity of resource (topic)
+		if not resource:
+			logging.warning('No topic specified. Cannot subscribe.')
+			return False
+		
+		# check validity of QoS - set to default if necessary
+		if qos < 0 or qos > 2:
+			qos = ConfigConst.DEFAULT_QOS
+		
+		# subscribe to topic
+		logging.info('Subscribing to topic %s', resource.value)
+		self.mqttClient.subscribe(resource.value, qos)
+		
+		return True
 	
 	def unsubscribeFromTopic(self, resource: ResourceNameEnum = None):
-		pass
+		# check validity of resource (topic)
+		if not resource:
+			logging.warning('No topic specified. Cannot unsubscribe.')
+			return False
+		
+		logging.info('Unsubscribing to topic %s', resource.value)
+		self.mqttClient.unsubscribe(resource.value)
+		
+		return True
 
-	def setDataMessageListener(self, listener: IDataMessageListener = None) -> bool:
-		pass
+	#def setDataMessageListener(self, listener: IDataMessageListener = None) -> bool:
+	#	pass
+	
+	def setDataMessageListener(self, listener: IDataMessageListener = None):
+		if listener:
+			self.dataMsgListener = listener
+        	

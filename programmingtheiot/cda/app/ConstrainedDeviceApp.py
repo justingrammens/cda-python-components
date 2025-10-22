@@ -43,7 +43,8 @@ class ConstrainedDeviceApp():
 		self.sysPerfMgr = SystemPerformanceManager()
 		self.dataMgr = DeviceDataManager()
 		
-		self.isStarted = False
+		#self.isStarted = False
+		self.isStarted = True
 
 	def isAppStarted(self) -> bool:
 		"""
@@ -57,8 +58,12 @@ class ConstrainedDeviceApp():
 		"""
 		logging.info("Starting CDA...")
 		
+		# NOTE!! : LETS NOT HAVE IT START THESE FOR NOW AS WE ARE TESTING MQTT
+		'''
 		self.sysPerfMgr.startManager()
+		'''
 		self.dataMgr.startManager()
+		
 		
 		logging.info("CDA started.")
 
