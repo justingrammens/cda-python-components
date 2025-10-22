@@ -12,6 +12,7 @@
 
 import logging
 
+from programmingtheiot.cda.connection.CoapServerAdapter import CoapServerAdapter
 
 from programmingtheiot.cda.connection.CoapClientConnector import CoapClientConnector
 from programmingtheiot.cda.connection.MqttClientConnector import MqttClientConnector
@@ -107,6 +108,13 @@ class DeviceDataManager(IDataMessageListener):
 		self.triggerHvacTempCeiling   = \
 			self.configUtil.getFloat( \
 				ConfigConst.CONSTRAINED_DEVICE, ConfigConst.TRIGGER_HVAC_TEMP_CEILING_KEY);
+				
+		self.enableCoapServer = \
+			self.configUtil.getBoolean( \
+				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_SERVER_KEY)
+			
+		if self.enableCoapServer:
+			self.coapServer = CoapServerAdapter(dataMsgListener = self)
 		
 	def getLatestActuatorDataResponseFromCache(self, name: str = None) -> ActuatorData:
 		"""
@@ -263,6 +271,9 @@ class DeviceDataManager(IDataMessageListener):
 			
 		logging.info("Started DeviceDataManager.")
 		
+		if self.coapServer:
+			self.coapServer.startServer()
+		
 	def stopManager(self):
 		logging.info("Stopping DeviceDataManager...")
 	
@@ -284,6 +295,9 @@ class DeviceDataManager(IDataMessageListener):
 				logging.debug("MQTT disconnect failed: %s", e)
 			
 		logging.info("Stopped DeviceDataManager.")
+		
+		if self.coapServer:
+			self.coapServer.stopServer()
 		
 	def _handleIncomingDataAnalysis(self, msg: str):
 		"""
