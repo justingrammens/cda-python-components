@@ -22,6 +22,7 @@ from programmingtheiot.cda.connection.CoapClientConnector import CoapClientConne
 
 from programmingtheiot.data.DataUtil import DataUtil
 from programmingtheiot.data.SensorData import SensorData
+from aiocoap.cli.client import log
 
 class CoapClientConnectorTest(unittest.TestCase):
 	"""
@@ -99,7 +100,7 @@ class CoapClientConnectorTest(unittest.TestCase):
 		self.coapClient.sendDeleteRequest( \
 			resource = ResourceNameEnum.CDA_SENSOR_MSG_RESOURCE, enableCON = False, timeout = 5)
 
-	@unittest.skip("Ignore for now.")
+	#@unittest.skip("Ignore for now.")
 	def testPostSensorMessageCon(self):
 		"""
 		Comment the annotation to test CON POST
@@ -109,7 +110,8 @@ class CoapClientConnectorTest(unittest.TestCase):
 		
 		self.coapClient.sendPostRequest( \
 			resource = ResourceNameEnum.CDA_SENSOR_MSG_RESOURCE, enableCON = True, payload = jsonData, timeout = 5)
-	
+		logging.info("POST with CON completed.")	
+
 	@unittest.skip("Ignore for now.")
 	def testPostSensorMessageNon(self):
 		"""

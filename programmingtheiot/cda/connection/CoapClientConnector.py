@@ -80,7 +80,20 @@ class CoapClientConnector(IRequestResponseClient):
 		self.coapClient.send_request(request = request, timeout = timeout, callback = self._onDiscoveryResponse)
 
 	def sendDeleteRequest(self, resource: ResourceNameEnum = None, name: str = None, enableCON: bool = False, timeout: int = IRequestResponseClient.DEFAULT_TIMEOUT) -> bool:
-		pass
+		if resource or name:
+			resourcePath = self._createResourcePath(resource, name)
+			
+			logging.info(f"Issuing DELETE with path: {resourcePath}")
+			
+			request = self.coapClient.mk_request(defines.Codes.DELETE, path = resourcePath)
+			request.token = generate_random_token(2)
+			
+			if not enableCON:
+				request.type = defines.Types["NON"]
+				
+			self.coapClient.send_request(request = request, callback = self._onDeleteResponse, timeout = timeout)
+		else:
+			logging.warning("Can't test DELETE - no path or path list provided.")
 
 	def sendGetRequest(self, resource: ResourceNameEnum = None, name: str = None, enableCON: bool = False, timeout: int = IRequestResponseClient.DEFAULT_TIMEOUT) -> bool:
 		if resource or name:
@@ -101,7 +114,23 @@ class CoapClientConnector(IRequestResponseClient):
 			logging.warning("Can't test GET - no path or path list provided.")
 
 	def sendPostRequest(self, resource: ResourceNameEnum = None, name: str = None, enableCON: bool = False, payload: str = None, timeout: int = IRequestResponseClient.DEFAULT_TIMEOUT) -> bool:
-		pass
+		if resource or name:
+			resourcePath = self._createResourcePath(resource, name)
+			
+			logging.info(f"Issuing POST with path: {resourcePath}")
+			
+			request = self.coapClient.mk_request(defines.Codes.POST, path = resourcePath)
+			request.token = generate_random_token(2)
+			request.payload = payload
+			
+			if not enableCON:
+				request.type = defines.Types["NON"]
+			
+			logging.info(f"Sending POST with payload: {payload}")
+			
+			self.coapClient.send_request(request = request, callback = self._onPostResponse, timeout = timeout)
+		else:
+			logging.warning("Can't test POST - no path or path list provided.")
 
 	def sendPutRequest(self, resource: ResourceNameEnum = None, name: str = None, enableCON: bool = False, payload: str = None, timeout: int = IRequestResponseClient.DEFAULT_TIMEOUT) -> bool:
 		if resource or name:
@@ -128,10 +157,56 @@ class CoapClientConnector(IRequestResponseClient):
 		return False
 
 	def startObserver(self, resource: ResourceNameEnum = None, name: str = None, ttl: int = IRequestResponseClient.DEFAULT_TTL) -> bool:
-		pass
+		if resource or name:
+			if resource in self.observeRequests:
+				logging.warning(f"Already observing resource {resource}. Ignoring start observe request.")
+				return
+			
+			self.observeRequests[resource] = None
+			
+			resourcePath = self._createResourcePath(resource, name)
+			
+			observeActuatorCmdHandler = \
+				HandleActuatorEvent( \
+					listener = self.dataMsgListener, resource = resource, requests = self.observeRequests)
+			
+			try:
+				self.coapClient.observe(path = resourcePath, callback = observeActuatorCmdHandler.handleActuatorResponse)
+				
+			except Exception as e:
+				logging.warning(f"Failed to observe path: {resourcePath}")
 
 	def stopObserver(self, resource: ResourceNameEnum = None, name: str = None, timeout: int = IRequestResponseClient.DEFAULT_TIMEOUT) -> bool:
-		pass
+		if resource or name:
+			if not resource in self.observeRequests:
+				logging.warning(f"Resource {resource} not being observed. Ignoring stop observe request.")
+				return
+			
+			response = self.observeRequests[resource]
+			
+			if response:
+				logging.info(f"Cancelling observe for resource {resource}.")
+				
+				try:
+					self.coapClient.cancel_observing(response = response, send_rst = True)
+					
+					del self.observeRequests[resource]
+					
+					logging.info(f"Cancelled observe for resource {resource}.")
+
+				except Exception as e:
+					logging.warning(f"Failed to cancel observe for resource {resource}")
+					traceback.print_exception(type(e), e, e.__traceback__)
+			else:
+				logging.warning(f"No response yet for observed resource {resource}. Attempting to stop anyway.")
+				
+				try:
+					self.coapClient.cancel_observing(response = None, send_rst = True)
+					logging.info(f"Canceled observe for resource {resource}.")
+
+				except Exception as e:
+					logging.warning(f"Failed to cancel observe for resource {resource}.")
+					traceback.print_exception(type(e), e, e.__traceback__)
 	
 	def _createResourcePath(self, resource: ResourceNameEnum = None, name: str = None):
 		resourcePath = ""
@@ -161,7 +236,11 @@ class CoapClientConnector(IRequestResponseClient):
 			traceback.print_exception(type(e), e, e.__traceback__)
 			
 	def _onDeleteResponse(self, response):
-		pass
+		if not response:
+			logging.warning("DELETE response invalid. Ignoring.")
+			return
+		
+		logging.info(f"DELETE response received: {response.payload}")
 	
 	def _onDiscoveryResponse(self, response):
 		if not response:
@@ -202,7 +281,11 @@ class CoapClientConnector(IRequestResponseClient):
 			logging.info(f"Response data received. Payload: {jsonData}")
 	
 	def _onPostResponse(self, response):
-		pass
+		if not response:
+			logging.warning("POST response invalid. Ignoring.")
+			return
+		
+		logging.info(f"POST response received: {response.payload}")
 	
 	def _onPutResponse(self, response):
 		if not response:
@@ -210,5 +293,35 @@ class CoapClientConnector(IRequestResponseClient):
 			return
 		
 		logging.info(f"PUT response received: {response.payload}")
+		
+class HandleActuatorEvent():
+	def __init__(self, \
+		listener: IDataMessageListener = None, \
+		resource: ResourceNameEnum = ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE, \
+		requests = None):
 	
-	
+		self.listener = listener
+		self.resource = resource
+		self.observeRequests = requests
+		
+		if not self.resource:
+			self.resource = ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE
+		
+	def handleActuatorResponse(self, response):
+		if response:
+			jsonData = response.payload
+			
+			if self.observeRequests is not None:
+				self.observeRequests[self.resource] = response
+			
+			logging.info(f"Received actuator command response to resource {self.resource} -> {jsonData}")
+			
+			if self.listener:
+				try:
+					data = DataUtil().jsonToActuatorData(jsonData = jsonData)
+					self.listener.handleActuatorCommandMessage(data = data)
+
+				except:
+					logging.warning(f"Failed to decode actuator data. Ignoring: {jsonData}")
+
+
