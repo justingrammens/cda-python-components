@@ -35,6 +35,8 @@ from programmingtheiot.data.ActuatorData import ActuatorData
 from programmingtheiot.data.SensorData import SensorData
 from programmingtheiot.data.SystemPerformanceData import SystemPerformanceData
 
+from programmingtheiot.cda.connection.AsyncCoapClientConnector import AsyncCoapClientConnector
+
 # NEW: Redis adapter
 #from programmingtheiot.cda.connection.RedisPersistenceAdapter import RedisPersistenceAdapter
 
@@ -115,6 +117,20 @@ class DeviceDataManager(IDataMessageListener):
 			
 		if self.enableCoapServer:
 			self.coapServer = CoapServerAdapter(dataMsgListener = self)
+		
+		self.enableCoapClient = \
+			self.configUtil.getBoolean( \
+				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_CLIENT_KEY)
+			
+		if self.enableCoapClient:
+			self.coapClient = CoapClientConnector(dataMsgListener = self)
+		
+		self.enableCoapClient = \
+			self.configUtil.getBoolean( \
+				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_CLIENT_KEY)
+			
+		#if self.enableCoapClient:
+			#self.coapClient = AsyncCoapServerAdapter(dataMsgListener = self)
 		
 	def getLatestActuatorDataResponseFromCache(self, name: str = None) -> ActuatorData:
 		"""
