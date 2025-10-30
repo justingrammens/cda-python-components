@@ -36,7 +36,7 @@ class SensorData(BaseIotData):
 		if data and isinstance(data, SensorData):
 			self.value = data.getValue()
 	
-	'''
+	
 	def __str__(self):
 		"""
 		Returns a string representation of this instance.
@@ -55,6 +55,6 @@ class SensorData(BaseIotData):
 			ConfigConst.LATITUDE_PROP, self.latitude,
 			ConfigConst.LONGITUDE_PROP, self.longitude,
 			ConfigConst.VALUE_PROP, self.value)
-	'''		
+			
 			
 			
