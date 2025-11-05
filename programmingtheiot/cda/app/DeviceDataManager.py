@@ -38,7 +38,7 @@ from programmingtheiot.data.SystemPerformanceData import SystemPerformanceData
 from programmingtheiot.cda.connection.AsyncCoapClientConnector import AsyncCoapClientConnector
 
 # NEW: Redis adapter
-#from programmingtheiot.cda.connection.RedisPersistenceAdapter import RedisPersistenceAdapter
+# from programmingtheiot.cda.connection.RedisPersistenceAdapter import RedisPersistenceAdapter
 
 
 class DeviceDataManager(IDataMessageListener):
@@ -46,34 +46,35 @@ class DeviceDataManager(IDataMessageListener):
 	Shell representation of class for student implementation.
 	
 	"""
+
 	def __init__(self):
 		self.configUtil = ConfigUtil()
 	
 		self.enableMqttClient = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_MQTT_CLIENT_KEY)
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_MQTT_CLIENT_KEY)
 		
 		logging.info(f"EnableMqttClient = {self.enableMqttClient}")
 		
-		self.enableSystemPerf   = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_SYSTEM_PERF_KEY)
+		self.enableSystemPerf = \
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_SYSTEM_PERF_KEY)
 			
-		self.enableSensing      = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_SENSING_KEY)
+		self.enableSensing = \
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_SENSING_KEY)
 		
 		# NOTE: this can also be retrieved from the configuration file
-		self.enableActuation    = True
+		self.enableActuation = True
 		
-		self.sysPerfMgr         = None
-		self.sensorAdapterMgr   = None
+		self.sysPerfMgr = None
+		self.sensorAdapterMgr = None
 		self.actuatorAdapterMgr = None
 		
 		# NOTE: The following aren't used until Part III but should be declared now
-		self.mqttClient         = None
-		self.coapClient         = None
-		self.coapServer         = None
+		self.mqttClient = None
+		self.coapClient = None
+		self.coapServer = None
 		
 		if self.enableSystemPerf:
 			self.sysPerfMgr = SystemPerformanceManager()
@@ -86,7 +87,7 @@ class DeviceDataManager(IDataMessageListener):
 			logging.info("Local sensor tracking enabled")
 			
 		if self.enableActuation:
-			self.actuatorAdapterMgr = ActuatorAdapterManager(dataMsgListener = self)
+			self.actuatorAdapterMgr = ActuatorAdapterManager(dataMsgListener=self)
 			logging.info("Local actuation capabilities enabled")
 			
 		# [CDA-06-004] Create MQTT client and set listener (if enabled)
@@ -98,41 +99,40 @@ class DeviceDataManager(IDataMessageListener):
 			self.mqttClient.setDataMessageListener(self)
 			logging.info("MQTT client initialized and listener set.")  # [CDA-06-004]
 		
-		
 		self.handleTempChangeOnDevice = \
-			self.configUtil.getBoolean( \
+			self.configUtil.getBoolean(\
 				ConfigConst.CONSTRAINED_DEVICE, ConfigConst.HANDLE_TEMP_CHANGE_ON_DEVICE_KEY)
 			
-		self.triggerHvacTempFloor     = \
-			self.configUtil.getFloat( \
+		self.triggerHvacTempFloor = \
+			self.configUtil.getFloat(\
 				ConfigConst.CONSTRAINED_DEVICE, ConfigConst.TRIGGER_HVAC_TEMP_FLOOR_KEY);
 				
-		self.triggerHvacTempCeiling   = \
-			self.configUtil.getFloat( \
+		self.triggerHvacTempCeiling = \
+			self.configUtil.getFloat(\
 				ConfigConst.CONSTRAINED_DEVICE, ConfigConst.TRIGGER_HVAC_TEMP_CEILING_KEY);
 				
 		self.enableCoapServer = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_SERVER_KEY)
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_COAP_SERVER_KEY)
 			
 		if self.enableCoapServer:
-			self.coapServer = CoapServerAdapter(dataMsgListener = self)
+			self.coapServer = CoapServerAdapter(dataMsgListener=self)
 		
 		self.enableCoapClient = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_CLIENT_KEY)
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_COAP_CLIENT_KEY)
 			
 		if self.enableCoapClient:
-			self.coapClient = CoapClientConnector(dataMsgListener = self)
+			self.coapClient = CoapClientConnector(dataMsgListener=self)
 		
 		self.enableCoapClient = \
-			self.configUtil.getBoolean( \
-				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_CLIENT_KEY)
+			self.configUtil.getBoolean(\
+				section=ConfigConst.CONSTRAINED_DEVICE, key=ConfigConst.ENABLE_COAP_CLIENT_KEY)
 			
-		#if self.enableCoapClient:
-			#self.coapClient = AsyncCoapServerAdapter(dataMsgListener = self)
+		# if self.enableCoapClient:
+			# self.coapClient = AsyncCoapServerAdapter(dataMsgListener = self)
 		
-	def getLatestActuatorDataResponseFromCache(self, name: str = None) -> ActuatorData:
+	def getLatestActuatorDataResponseFromCache(self, name: str=None) -> ActuatorData:
 		"""
 		Retrieves the named actuator data (response) item from the internal data cache.
 		
@@ -141,7 +141,7 @@ class DeviceDataManager(IDataMessageListener):
 		"""
 		pass
 		
-	def getLatestSensorDataFromCache(self, name: str = None) -> SensorData:
+	def getLatestSensorDataFromCache(self, name: str=None) -> SensorData:
 		"""
 		Retrieves the named sensor data item from the internal data cache.
 		
@@ -150,7 +150,7 @@ class DeviceDataManager(IDataMessageListener):
 		"""
 		pass
 	
-	def getLatestSystemPerformanceDataFromCache(self, name: str = None) -> SystemPerformanceData:
+	def getLatestSystemPerformanceDataFromCache(self, name: str=None) -> SystemPerformanceData:
 		"""
 		Retrieves the named system performance data from the internal data cache.
 		
@@ -171,7 +171,7 @@ class DeviceDataManager(IDataMessageListener):
 		pass
 	'''
 	
-	def handleActuatorCommandMessage(self, data: ActuatorData = None) -> ActuatorData:
+	def handleActuatorCommandMessage(self, data: ActuatorData=None) -> ActuatorData:
 		logging.info("Actuator data: " + str(data))
 		
 		if data:
@@ -195,7 +195,7 @@ class DeviceDataManager(IDataMessageListener):
 		pass
 	'''
 		
-	def handleActuatorCommandResponse(self, data: ActuatorData = None) -> bool:
+	def handleActuatorCommandResponse(self, data: ActuatorData=None) -> bool:
 		if data:
 			logging.debug("Incoming actuator response received (from actuator manager): " + str(data))
 			
@@ -207,7 +207,7 @@ class DeviceDataManager(IDataMessageListener):
 			resourceName = ResourceNameEnum.CDA_ACTUATOR_RESPONSE_RESOURCE
 			
 			# delegate to the transmit function any potential upstream comm's
-			self._handleUpstreamTransmission(resource = resourceName, msg = actuatorMsg)
+			self._handleUpstreamTransmission(resource=resourceName, msg=actuatorMsg)
 			
 			return True
 		else:
@@ -226,21 +226,23 @@ class DeviceDataManager(IDataMessageListener):
 		"""
 		pass
 	
-	def handleSensorMessage(self, data: SensorData) -> bool:
-		"""
-		This callback method will be invoked by the sensor manager that just processed
-		a new sensor reading, which creates a new SensorData instance that will be
-		passed to this method.
-		
-		@param data The incoming SensorData message.
-		@return boolean
-		"""
+	def handleSensorMessage(self, data: SensorData = None) -> bool:
 		if data:
-			logging.debug("Incoming sensor data received (from sensor manager): " + str(data))
+			logging.info("Incoming sensor data received (from sensor manager): " + str(data))
+			
+			# TODO: Optionally, implement `_handleSensorDataAnalysis()` to handle internal analytics
 			self._handleSensorDataAnalysis(data = data)
+			
+			# Convert the `SensorData` instance to JSON
+			jsonData = DataUtil().sensorDataToJson(data = data)
+			
+			# Pass the resource and newly generated JSON data to `_handleUpstreamTransmission()`
+			self._handleUpstreamTransmission(resource = ResourceNameEnum.CDA_SENSOR_MSG_RESOURCE, msg = jsonData)
+			
 			return True
 		else:
 			logging.warning("Incoming sensor data is invalid (null). Ignoring.")
+			
 			return False
 	
 	def handleSystemPerformanceMessage(self, data: SystemPerformanceData) -> bool:
@@ -259,10 +261,10 @@ class DeviceDataManager(IDataMessageListener):
 			logging.warning("Incoming system performance data is invalid (null). Ignoring.")
 			return False
 	
-	def setSystemPerformanceDataListener(self, listener: ISystemPerformanceDataListener = None):
+	def setSystemPerformanceDataListener(self, listener: ISystemPerformanceDataListener=None):
 		pass
 			
-	def setTelemetryDataListener(self, name: str = None, listener: ITelemetryDataListener = None):
+	def setTelemetryDataListener(self, name: str=None, listener: ITelemetryDataListener=None):
 		pass
 			
 	def startManager(self):
@@ -279,8 +281,8 @@ class DeviceDataManager(IDataMessageListener):
 			try:
 				self.mqttClient.connectClient()
 				self.mqttClient.subscribeToTopic(
-					ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE, 
-					callback = None, qos = ConfigConst.DEFAULT_QOS)
+					ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE,
+					callback=None, qos=ConfigConst.DEFAULT_QOS)
 				logging.info("MQTT connected and subscribed to %s", ResourceNameEnum.CDA_ACTUATOR_CMD_RESOURCE.value)
 			except Exception as e:
 				logging.exception("Failed to start MQTT client: %s", e)
@@ -335,7 +337,7 @@ class DeviceDataManager(IDataMessageListener):
 		if self.handleTempChangeOnDevice and data.getTypeID() == ConfigConst.TEMP_SENSOR_TYPE:
 			logging.info("Handle temp change: %s - type ID: %s", str(self.handleTempChangeOnDevice), str(data.getTypeID()))
 			
-			ad = ActuatorData(typeID = ConfigConst.HVAC_ACTUATOR_TYPE)
+			ad = ActuatorData(typeID=ConfigConst.HVAC_ACTUATOR_TYPE)
 			
 			if data.getValue() > self.triggerHvacTempCeiling:
 				ad.setCommand(ConfigConst.COMMAND_ON)
@@ -354,11 +356,19 @@ class DeviceDataManager(IDataMessageListener):
 			# task implementations, and not this function
 			self.handleActuatorCommandMessage(ad)
 		
-	def _handleUpstreamTransmission(self, resourceName: ResourceNameEnum, msg: str):
-		"""
-		Call this from handleActuatorCommandResponse(), handlesensorMessage(), and handleSystemPerformanceMessage()
-		to determine if the message should be sent upstream. Steps to take:
-		1) Check connection: Is there a client connection configured (and valid) to a remote MQTT or CoAP server?
-		2) Act on msg: If # 1 is true, send message upstream using one (or both) client connections.
-		"""
-		pass
+	def _handleUpstreamTransmission(self, resource = None, msg: str = None):
+		logging.info("Upstream transmission invoked. Checking comm's integration.")
+		
+		# NOTE: If using MQTT, the following will attempt to publish the message to the broker
+		if self.mqttClient:
+			if self.mqttClient.publishMessage(resource = resource, msg = msg):
+				logging.debug("Published incoming data to resource (MQTT): %s", str(resource))
+			else:
+				logging.warning("Failed to publish incoming data to resource (MQTT): %s", str(resource))
+		
+		# NOTE: If using CoAP, the following will attempt to PUT the message to the server
+		if self.coapClient:
+			if self.coapClient.sendPutRequest(resource = resource, payload = msg):
+				logging.debug("Put incoming message data to resource (CoAP): %s", str(resource))
+			else:
+				logging.warning("Failed to put incoming message data to resource (CoAP): %s", str(resource))

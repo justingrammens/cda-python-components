@@ -50,12 +50,20 @@ class DeviceDataManagerWithCommsTest(unittest.TestCase):
 
 	#@unittest.skip("Ignore for now.")
 	def testActuatorDataCallback(self):
+		# Option 1 example (be sure to disable comm's using PiotConfig.props):
 		ddMgr = DeviceDataManager()
 		
-		actuatorData = ActuatorData(typeID = ConfigConst.HVAC_ACTUATOR_TYPE)
+		# Option 2 example (be sure to update the DeviceDataManager constructor):
+		#ddMgr = DeviceDataManager(disableAllComms = True)
+		
+		#ddMgr = DeviceDataManager(disableAllComms = True)
+		
+		#actuatorData = ActuatorData(actuatorType = ConfigConst.HVAC_ACTUATOR_TYPE)
+		
+		actuatorData = ActuatorData(ConfigConst.HVAC_ACTUATOR_TYPE)
+		
 		actuatorData.setCommand(ConfigConst.COMMAND_ON)
 		actuatorData.setStateData("This is a test.")
-		actuatorData.setValue(52)
 		
 		ddMgr.handleActuatorCommandMessage(actuatorData)
 		

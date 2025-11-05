@@ -16,6 +16,7 @@ import traceback
 from threading import Thread
 from time import sleep
 
+
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 
