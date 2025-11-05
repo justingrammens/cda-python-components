@@ -47,13 +47,18 @@ class DeviceDataManagerIntegrationTest(unittest.TestCase):
 
 	def tearDown(self):
 		pass
-
-	@unittest.skip("Ignore for now.")
+	
 	def testDeviceDataMgrTimedIntegration(self):
+		# OPTION 1: For MQTT testing - be sure the MQTT client is enabled in `PiotConfig.props`.
+		#           and your MQTT broker is running (as per the Setup instructions above).
+		# OPTION 2: For CoAP testing - be sure the CoAP client is enabled in `PiotConfig.props`,
+		#           and your CoAP server is running within your GDA.
 		ddMgr = DeviceDataManager()
 		ddMgr.startManager()
 		
-		sleep(60)
+		# 5 min's should be long enough to run the tests and manually adjust the emulator values
+		#sleep(60)
+		sleep(300)
 		
 		ddMgr.stopManager()
 		
